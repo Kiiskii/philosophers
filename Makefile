@@ -4,7 +4,8 @@ HDRS = -Iincludes/
 HDR_PATH = includes/
 OBJS_DIR = obj
 
-SRCS = srcs/main.c srcs/utils.c srcs/ph_exit.c srcs/parse_input.c
+SRCS =	srcs/main.c srcs/utils.c srcs/ph_exit.c srcs/parse_input.c \
+		srcs/init_philos.c srcs/create_threads.c srcs/routine.c
 NAME = philo
 OBJS = $(patsubst srcs/%.c, $(OBJS_DIR)/%.o, $(SRCS))
 

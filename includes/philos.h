@@ -9,18 +9,29 @@
 # include <limits.h>		//INT_MAX
 # include <sys/time.h>		//gettimeofday()
 # include <string.h>		//memset()
+# include <stdbool.h>		//bool datatype
 
 typedef struct s_data
 {
-	int	ph_count;
-	int	die_ms;
-	int	eat_ms;
-	int	sleep_ms;
-	int	must_eat;
+	size_t		ph_count;
+	size_t		die_ms;
+	size_t		eat_ms;
+	size_t		sleep_ms;
+	size_t		must_eat;
+	pthread_t	*threads;
 }		t_data;
+
+typedef struct s_philo
+{
+	int		index;
+	t_data	*data;
+}		t_philo;
 
 void	ph_parse_input(int ac, char **av, t_data *data);
 void	ph_exit(char *msg);
+void	ph_init_philos(t_data *data, t_philo **philo);
+void	create_threads(t_data *data, t_philo *philo);
+void	run_routine(void *arg);
 
 //utils
 int	ph_putstr_fd(char *s, int fd);
