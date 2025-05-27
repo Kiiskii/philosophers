@@ -15,4 +15,8 @@ than 0 and cannot exceed value of INT_MAX (2147483647)\n"
 
 # define THREAD_FAIL "thread creation failed!\n"
 
+# define INIT_PRINT_LOCK "failed to init print_lock\n"
+
+# define INIT_INDEX_LOCK "failed to init index_lock\n"
+
 #endif

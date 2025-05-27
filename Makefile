@@ -5,13 +5,16 @@ HDR_PATH = includes/
 OBJS_DIR = obj
 
 SRCS =	srcs/main.c srcs/utils.c srcs/ph_exit.c srcs/parse_input.c \
-		srcs/init_philos.c srcs/create_threads.c srcs/routine.c
+		srcs/init_philos.c srcs/create_threads.c srcs/routine.c \
+		srcs/init_mutexes.c
 NAME = philo
 OBJS = $(patsubst srcs/%.c, $(OBJS_DIR)/%.o, $(SRCS))
 
 GREEN = \033[32m
 ORANGE = \033[38;5;214m
 RESET = \033[0m
+
+all: $(NAME)
 
 $(NAME): $(OBJS)
 	@echo "$(GREEN)----------------------------------------$(RESET)"

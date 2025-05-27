@@ -1,6 +1,6 @@
 #include "philos.h"
 
-void	create_threads(t_data *data, t_philo *philo)
+void	ph_create_threads(t_data *data, t_philo *philo)
 {
 	void	*func;
 	size_t	i;
@@ -13,6 +13,20 @@ void	create_threads(t_data *data, t_philo *philo)
 	while (i < data->ph_count)
 	{
 		if (pthread_create(&data->threads[i], NULL, func, &philo[i]))
+			ph_exit(THREAD_FAIL);
+		i++;
+	}
+}
+
+void	ph_join_threads(t_data *data, t_philo *philo)
+{
+	size_t	i;
+
+	i = 0;
+	(void)philo;
+	while (i < data->ph_count)
+	{
+		if (pthread_join(data->threads[i], NULL))
 			ph_exit(THREAD_FAIL);
 		i++;
 	}

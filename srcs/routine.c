@@ -4,14 +4,21 @@ void	run_routine(void *arg)
 {
 	t_philo	*philo;
 	t_data	*data;
-	size_t	i;
 
 	philo = arg;
 	data = philo->data;
-	i = 0;
-	while (i < data->ph_count)
+	while (1)
 	{
-		printf("Thread index: %d\n", philo->index);
-		i++;
+		if (philo->index == data->current_index)
+		{
+			pthread_mutex_lock(&data->print_lock);
+			printf("Thread index: %zu\n", philo->index);
+			pthread_mutex_unlock(&data->print_lock);
+			data->current_index++;
+			pthread_mutex_unlock(&data->index_lock);
+			break ;
+		}
+		pthread_mutex_unlock(&data->index_lock);
+		usleep(100);
 	}
 }
