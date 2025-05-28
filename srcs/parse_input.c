@@ -14,12 +14,10 @@ void	ph_parse_input(int ac, char **av, t_data *data)
 	if (is_number(ac, av) == 1)
 		ph_exit(INVALID_NUMBER);
 	err = init_data(ac, av, data);
+	if (data->ph_count > PHILO_MAX)
+		ph_exit(PH_COUNT);
 	if (err < 0)
 		ph_exit(OVER_INTMAX);
-	if (data->die_ms < data->eat_ms)
-		data->eat_ms = data->die_ms;
-	if (data->die_ms < data->sleep_ms)
-		data->sleep_ms = data->die_ms;
 }
 
 static int	is_number(int ac, char **av)

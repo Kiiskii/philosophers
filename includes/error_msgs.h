@@ -11,6 +11,8 @@ positive and only include numbers.\n"
 # define OVER_INTMAX "usage: input value must be greater \
 than 0 and cannot exceed value of INT_MAX (2147483647)\n"
 
+# define PH_COUNT "philo count cannot exceed 50!\n"
+
 # define MALLOC_FAIL "memory allocation failed!\n"
 
 # define THREAD_FAIL "thread creation failed!\n"
@@ -18,5 +20,7 @@ than 0 and cannot exceed value of INT_MAX (2147483647)\n"
 # define INIT_PRINT_LOCK "failed to init print_lock\n"
 
 # define INIT_INDEX_LOCK "failed to init index_lock\n"
+
+# define PHILO_MAX 500
 
 #endif
