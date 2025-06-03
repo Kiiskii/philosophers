@@ -21,3 +21,11 @@ int	ft_isblank(int c)
 		return (1);
 	return (0);
 }
+
+long	ph_time_to_ms(void)
+{
+	struct timeval	tv;
+
+	gettimeofday(&tv, NULL);
+	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
+}

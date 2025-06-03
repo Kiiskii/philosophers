@@ -59,7 +59,7 @@ static int	init_data(int ac, char **av, t_data *data)
 	data->sleep_ms = string_to_number(av[3]);
 	if (data->sleep_ms > INT_MAX || data->sleep_ms == 0)
 		return (-1);
-	if (ac == 6)
+	if (ac == 5)
 	{
 		data->must_eat = string_to_number(av[4]);
 		if (data->must_eat > INT_MAX || data->must_eat == 0)

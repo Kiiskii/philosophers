@@ -13,6 +13,9 @@ void	ph_init_philos(t_data *data, t_philo **philo)
 	{
 		tmp[i].index = i + 1;
 		tmp[i].data = data;
+		tmp[i].l_fork = &data->forks[i];
+		tmp[i].r_fork = &data->forks[(i + 1) % data->ph_count];
+		tmp[i].last_meal = data->start_ms;
 		i++;
 	}
 	*philo = tmp;

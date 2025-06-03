@@ -21,6 +21,8 @@ than 0 and cannot exceed value of INT_MAX (2147483647)\n"
 
 # define INIT_INDEX_LOCK "failed to init index_lock\n"
 
+# define INIT_FORK_MUTEX "failed to init fork mutex\n"
+
 # define PHILO_MAX 500
 
 #endif
