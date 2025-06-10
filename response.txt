@@ -1,0 +1,158 @@
+
+## Copilot ───
+
+Here are specific changes and improvements for your `srcs/routine.c` file and other related files:
+
+---
+
+### 1. **Prevent Deadlock in `ph_take_forks_and_eat`**
+   - **Issue**: Philosophers may cause a deadlock if all threads lock their left fork and wait indefinitely for the right fork.
+   - **Solution**: Use a consistent locking order (e.g., always lock the lower-indexed fork first).
+   - **Change in `ph_take_forks_and_eat`**:
+     ```c
+     if (philo->index % 2 == 0) {
+         pthread_mutex_lock(philo->r_fork);
+         pthread_mutex_lock(&data->print_lock);
+         printf("%ld %zu has taken a fork\n", ph_time_to_ms() - data->start_ms, philo->index);
+         pthread_mutex_unlock(&data->print_lock);
+
+         pthread_mutex_lock(philo->l_fork);
+         pthread_mutex_lock(&data->print_lock);
+         printf("%ld %zu has taken a fork\n", ph_time_to_ms() - data->start_ms, philo->index);
+         pthread_mutex_unlock(&data->print_lock);
+     } else {
+         pthread_mutex_lock(philo->l_fork);
+         pthread_mutex_lock(&data->print_lock);
+         printf("%ld %zu has taken a fork\n", ph_time_to_ms() - data->start_ms, philo->index);
+         pthread_mutex_unlock(&data->print_lock);
+
+         pthread_mutex_lock(philo->r_fork);
+         pthread_mutex_lock(&data->print_lock);
+         printf("%ld %zu has taken a fork\n", ph_time_to_ms() - data->start_ms, philo->index);
+         pthread_mutex_unlock(&data->print_lock);
+     }
+     ```
+
+---
+
+### 2. **Check for `data->dead` in `ph_take_forks_and_eat`**
+   - **Issue**: If a philosopher dies while holding a fork, other threads may block indefinitely.
+   - **Solution**: Check `data->dead` after locking each fork and release the fork if `data->dead` is `true`.
+   - **Change in `ph_take_forks_and_eat`**:
+     ```c
+     pthread_mutex_lock(philo->l_fork);
+     pthread_mutex_lock(&data->dead_lock);
+     if (data->dead) {
+         pthread_mutex_unlock(&data->dead_lock);
+         pthread_mutex_unlock(philo->l_fork);
+         return;
+     }
+     pthread_mutex_unlock(&data->dead_lock);
+
+     pthread_mutex_lock(philo->r_fork);
+     pthread_mutex_lock(&data->dead_lock);
+     if (data->dead) {
+         pthread_mutex_unlock(&data->dead_lock);
+         pthread_mutex_unlock(philo->r_fork);
+         pthread_mutex_unlock(philo->l_fork);
+         return;
+     }
+     pthread_mutex_unlock(&data->dead_lock);
+     ```
+
+---
+
+### 3. **Handle `must_eat` Condition in `run_routine`**
+   - **Issue**: The program doesn't properly handle the `must_eat` condition for all philosophers.
+   - **Solution**: Use a shared counter to track how many philosophers have met the `must_eat` condition.
+   - **Change in `run_routine`**:
+     ```c
+     if (philo->meals_eaten == philo->data->must_eat) {
+         pthread_mutex_lock(&philo->data->meal_lock);
+         philo->data->current_index++;
+         if (philo->data->current_index > philo->data->ph_count) {
+             pthread_mutex_lock(&philo->data->dead_lock);
+             philo->data->dead = true;
+             pthread_mutex_unlock(&philo->data->dead_lock);
+         }
+         pthread_mutex_unlock(&philo->data->meal_lock);
+         break;
+     }
+     ```
+
+---
+
+### 4. **Reduce `usleep` Granularity**
+   - **Issue**: `usleep` may cause delays in detecting a philosopher's death.
+   - **Solution**: Replace `usleep` with smaller sleep intervals and check `data->dead` in between.
+   - **Change in `ph_sleep`**:
+     ```c
+     size_t sleep_time = 0;
+     while (sleep_time < data->sleep_ms * 1000) {
+         usleep(100);
+         sleep_time += 100;
+         pthread_mutex_lock(&data->dead_lock);
+         if (data->dead) {
+             pthread_mutex_unlock(&data->dead_lock);
+             return;
+         }
+         pthread_mutex_unlock(&data->dead_lock);
+     }
+     ```
+
+---
+
+### 5. **Add Cleanup for Forks**
+   - **Issue**: Forks are not released if a philosopher dies mid-routine.
+   - **Solution**: Ensure forks are released in all exit paths.
+   - **Change in `ph_take_forks_and_eat`**:
+     ```c
+     pthread_mutex_unlock(philo->r_fork);
+     pthread_mutex_unlock(philo->l_fork);
+     ```
+
+---
+
+### 6. **Changes in `ph_monitor` (File: `srcs/main.c`)**
+   - **Issue**: `ph_monitor` doesn't stop threads when a philosopher dies.
+   - **Solution**: Add a mechanism to signal threads to stop.
+   - **Change in `ph_monitor`**:
+     ```c
+     pthread_mutex_lock(&data->dead_lock);
+     data->dead = true;
+     pthread_mutex_unlock(&data->dead_lock);
+     ```
+
+---
+
+### 7. **Free Resources in `main` (File: `srcs/main.c`)**
+   - **Issue**: Memory allocated for `data->forks`, `data->threads`, and `philo` is not freed.
+   - **Solution**: Add cleanup code at the end of `main`.
+   - **Change in `main`**:
+     ```c
+     for (size_t i = 0; i < data.ph_count; i++) {
+         pthread_mutex_destroy(&data.forks[i]);
+     }
+     pthread_mutex_destroy(&data.print_lock);
+     pthread_mutex_destroy(&data.dead_lock);
+     pthread_mutex_destroy(&data.meal_lock);
+     free(data.forks);
+     free(data.threads);
+     free(philo);
+     ```
+
+---
+
+### 8. **Improve Logging (Optional)**
+   - Add more detailed logs to track the state of each philosopher and debug issues.
+   - Example:
+     ```c
+     pthread_mutex_lock(&data->print_lock);
+     printf("Philosopher %zu: meals_eaten=%zu, last_meal=%ld\n", philo->index, philo->meals_eaten, philo->last_meal);
+     pthread_mutex_unlock(&data->print_lock);
+     ```
+
+---
+
+By implementing these changes in the specified files and functions, you should be able to address potential deadlocks, race conditions, and resource leaks while improving the overall stability of your program. Let me know if you need further clarification!
+

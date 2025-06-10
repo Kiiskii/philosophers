@@ -1,26 +1,29 @@
 #include "philos.h"
 
+//TODO: 
+
 void	ph_monitor(t_data *data, t_philo *philo)
 {
 	size_t	i;
+	long	elapsed;
 
 	while (1)
 	{
 		i = 0;
 		while (i < data->ph_count)
 		{
-			long elapsed = ph_time_to_ms() - philo[i].last_meal;
-			if (elapsed > (long)data->die_ms)
+			elapsed = ph_time_to_ms() - philo[i].last_meal;
+			if (elapsed >= (long)data->die_ms)
 			{
 				pthread_mutex_lock(&data->print_lock);
+				data->dead = true;
 				printf("%ld %zu died\n", ph_time_to_ms() - data->start_ms, philo[i].index);
 				pthread_mutex_unlock(&data->print_lock);
-				data->dead = true;
-				return;
+				ph_detach_threads(data, philo, data->ph_count, "Done\n");
 			}
 			i++;
 		}
-		usleep(1000);
+		usleep(500);
 	}
 }
 
