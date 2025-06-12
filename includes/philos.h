@@ -14,12 +14,12 @@
 typedef struct s_data
 {
 	size_t			ph_count;
-	size_t			start_ms;
-	size_t			die_ms;
-	size_t			eat_ms;
-	size_t			sleep_ms;
+	long			start_ms;
+	long			die_ms;
+	long			eat_ms;
+	long			sleep_ms;
 	size_t			must_eat;
-	size_t			current_index;
+	size_t			sated;
 	_Atomic bool	dead;
 	pthread_t		*threads;
 	pthread_mutex_t	print_lock;
@@ -32,8 +32,8 @@ typedef struct s_philo
 {
 	size_t			index;
 	_Atomic long	last_meal;
+	_Atomic size_t	meals_eaten;
 	t_data			*data;
-	size_t			meals_eaten;
 	pthread_mutex_t	*l_fork;
 	pthread_mutex_t	*r_fork;
 }		t_philo;
@@ -49,6 +49,7 @@ void	run_routine(void *arg);
 void	ph_detach_threads(t_data *data, t_philo *philo, size_t ind, char *msg);
 void	ph_destroy_mutexes(t_data *data, size_t ind, char *msg);
 void	ph_cleanup(char *msg, t_philo *philo, size_t i);
+void	ph_final_cleanup(t_philo *philo, size_t i);
 void	ph_exit(char *msg);
 
 //utils

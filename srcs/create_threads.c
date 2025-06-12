@@ -17,7 +17,6 @@ void	ph_create_threads(t_data *data, t_philo *philo)
 			ph_detach_threads(data, philo, i, THREAD_FAIL);
 		i++;
 	}
-	data->start_ms = ph_time_to_ms();
 	pthread_mutex_unlock(&data->index_lock);
 }
 

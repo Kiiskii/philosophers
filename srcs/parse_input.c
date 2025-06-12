@@ -65,6 +65,7 @@ static int	init_data(int ac, char **av, t_data *data)
 		if (data->must_eat > INT_MAX || data->must_eat == 0)
 			return (-1);
 	}
+	data->start_ms = ph_time_to_ms() + 200;
 	return (0);
 }
 

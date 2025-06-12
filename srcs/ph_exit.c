@@ -26,6 +26,13 @@ void	ph_cleanup(char *msg, t_philo *philo, size_t i)
 		free(philo);
 }
 
+void	ph_final_cleanup(t_philo *philo, size_t i)
+{
+	ph_destroy_mutexes(philo->data, i, "");
+	if (philo)
+		free(philo);
+}
+
 void	ph_destroy_mutexes(t_data *data, size_t ind, char *msg)
 {
 	size_t	i;

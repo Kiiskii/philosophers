@@ -17,7 +17,6 @@ void	ph_init_mutexes(t_data *data)
 		pthread_mutex_destroy(&data->index_lock);
 		ph_exit(INIT_MEAL_LOCK);
 	}
-	data->current_index = 1;
 	data->forks = malloc(sizeof(pthread_mutex_t) * data->ph_count);
 	if (!data->forks)
 		ph_destroy_mutexes(data, 0, MALLOC_FAIL);
