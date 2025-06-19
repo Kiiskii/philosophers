@@ -10,7 +10,7 @@ void	run_routine(void *arg)
 	t_philo	*philo;
 
 	philo = arg;
-	while (philo->data->start_ms > ph_time_to_ms())//test this
+	while (philo->data->start_ms > ph_time_to_ms())
 		usleep(500);
 	ph_print(THINKING, philo, philo->data);
 	if (philo->data->ph_count == 1)
@@ -21,12 +21,12 @@ void	run_routine(void *arg)
 	philo->last_meal = philo->data->start_ms;
 	if (philo->index % 2 != 0 && philo->data->ph_count > 1)
 		usleep((philo->data->eat_ms / 4) * 1000);
-	while (1)
+	while (!philo->data->dead)
 	{
-		if (philo->data->dead || philo->data->sated)
+		if (philo->data->dead)
 			return ;
 		ph_prep_meal(philo);
-		if (philo->data->dead || philo->data->sated)
+		if (philo->data->dead)
 			return ;
 		ph_think_sleep(philo);
 	}
@@ -51,9 +51,12 @@ static void	ph_think_sleep(t_philo *philo)
 	data = philo->data;
 	ph_print(SLEEPING, philo, data);
 	current_time = ph_time_to_ms();
-	while (ph_time_to_ms() - current_time < data->sleep_ms
-		&& (!data->dead || data->sated != data->ph_count))
+	while (ph_time_to_ms() - current_time < data->sleep_ms)
+	{
+		if (data->dead)
+			break ;
 		usleep(500);
+	}
 	ph_print(THINKING, philo, data);
 	if (philo->data->ph_count % 2 != 0
 		&& ph_time_to_ms() - philo->last_meal > data->sleep_ms)
@@ -77,8 +80,6 @@ static void	ph_prep_meal(t_philo *philo)
 	pthread_mutex_unlock(philo->l_fork);
 	pthread_mutex_unlock(philo->r_fork);
 	philo->meals_eaten++;
-	if (philo->meals_eaten == data->must_eat)
-		data->sated++;
 }
 
 static void	ph_take_forks_eat(t_data *data, t_philo *philo)
