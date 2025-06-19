@@ -19,7 +19,7 @@ positive and only include numbers.\n"
 # define OVER_INTMAX "usage: input value must be greater \
 than 0 and cannot exceed value of INT_MAX (2147483647)\n"
 
-# define PH_COUNT "philo count cannot exceed 50!\n"
+# define PH_COUNT "philo count cannot exceed 500!\n"
 
 # define MALLOC_FAIL "memory allocation failed!\n"
 

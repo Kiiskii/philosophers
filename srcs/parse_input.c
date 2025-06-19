@@ -10,14 +10,20 @@ void	ph_parse_input(int ac, char **av, t_data *data)
 
 	err = 0;
 	if (ac != 4 && ac != 5)
-		ph_exit(USAGE);
+	{
+		ph_exit(data, USAGE);
+		return ;
+	}
 	if (is_number(ac, av) == 1)
-		ph_exit(INVALID_NUMBER);
+	{
+		ph_exit(data, INVALID_NUMBER);
+		return ;
+	}
 	err = init_data(ac, av, data);
 	if (data->ph_count > PHILO_MAX)
-		ph_exit(PH_COUNT);
-	if (err < 0)
-		ph_exit(OVER_INTMAX);
+		ph_exit(data, PH_COUNT);
+	else if (err < 0)
+		ph_exit(data, OVER_INTMAX);
 }
 
 static int	is_number(int ac, char **av)
@@ -76,9 +82,7 @@ static size_t	string_to_number(char *str)
 
 	i = 0;
 	num = 0;
-	while (ft_isblank(str[i]) == 1)
-		i++;
-	while (str[i] >= '0' && str[i] <= '9')
+	while (str[i])
 	{
 		num = num * 10 + str[i] - '0';
 		if (num > INT_MAX)

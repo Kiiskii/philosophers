@@ -6,7 +6,7 @@ OBJS_DIR = obj
 
 SRCS =	srcs/main.c srcs/utils.c srcs/ph_exit.c srcs/parse_input.c \
 		srcs/init_philos.c srcs/create_threads.c srcs/routine.c \
-		srcs/init_mutexes.c
+		srcs/init_mutexes.c srcs/monitor.c
 NAME = philo
 OBJS = $(patsubst srcs/%.c, $(OBJS_DIR)/%.o, $(SRCS))
 
@@ -15,6 +15,12 @@ ORANGE = \033[38;5;214m
 RESET = \033[0m
 
 all: $(NAME)
+
+debug: CFLAGS:=$(CFLAGS) -g
+debug: re
+
+sanitize: CFLAGS:=$(CFLAGS) -g -fsanitize=thread
+sanitize: re
 
 $(NAME): $(OBJS)
 	@echo "$(GREEN)----------------------------------------$(RESET)"
@@ -43,4 +49,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re debug
