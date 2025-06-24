@@ -45,6 +45,7 @@ void	ph_final_cleanup(t_philo *philo)
 	if (data->threads)
 		free(data->threads);
 	pthread_mutex_destroy(&data->data_lock);
+	pthread_mutex_destroy(&data->meal_lock);
 	while (i < data->ph_count)
 	{
 		pthread_mutex_destroy(&data->forks[i]);
@@ -58,6 +59,7 @@ void	ph_destroy_mutexes(t_data *data, size_t ind, char *msg)
 
 	i = 0;
 	pthread_mutex_destroy(&data->data_lock);
+	pthread_mutex_destroy(&data->meal_lock);
 	if (ind > 0)
 	{
 		while (i < ind)

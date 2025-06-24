@@ -9,6 +9,12 @@ void	ph_init_mutexes(t_data *data)
 		ph_exit(data, INIT_DATA_LOCK);
 		return ;
 	}
+	if (pthread_mutex_init(&data->meal_lock, NULL))
+	{
+		pthread_mutex_destroy(&data->data_lock);
+		ph_exit(data, INIT_DATA_LOCK);
+		return ;
+	}
 	init_fork_mutexes(data);
 }
 

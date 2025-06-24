@@ -27,7 +27,9 @@ static size_t	is_philo_dead(t_data *data, t_philo *philo)
 	id = 0;
 	while (id < data->ph_count)
 	{
+		pthread_mutex_lock(&data->meal_lock);
 		elapsed = ph_time_to_ms() - philo[id].last_meal;
+		pthread_mutex_unlock(&data->meal_lock);
 		if (elapsed >= (long)data->die_ms)
 		{
 			current = ph_time_to_ms() - data->start_ms;

@@ -75,9 +75,8 @@ static void	ph_prep_meal(t_philo *philo)
 
 	data = philo->data;
 	ph_take_forks_eat(data, philo);
-	if (data->ph_count == 1)
-		return ;
 	philo->last_meal = ph_time_to_ms();
+	pthread_mutex_unlock(&data->meal_lock);
 	current_time = ph_time_to_ms();
 	while (ph_time_to_ms() - current_time < data->eat_ms
 		&& (!data->dead || data->sated != data->ph_count))
@@ -105,4 +104,5 @@ static void	ph_take_forks_eat(t_data *data, t_philo *philo)
 		ph_print(FORKING, philo, data);
 		ph_print(EATING, philo, data);
 	}
+	pthread_mutex_lock(&data->meal_lock);
 }

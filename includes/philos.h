@@ -24,6 +24,7 @@ typedef struct s_data
 	_Atomic bool	dead;
 	pthread_t		*threads;
 	pthread_mutex_t	data_lock;
+	pthread_mutex_t	meal_lock;
 	pthread_mutex_t	*forks;
 }		t_data;
 
