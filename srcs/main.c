@@ -1,12 +1,5 @@
 #include "philos.h"
 
-//TODO: When filos full isnt working!
-//		Delete unnecessary exit checks in main
-//		Search for final_cleanups
-//		Add exit checks on failures
-//		CHECK HEADERFILE NAME
-
-
 int	main(int ac, char *av[])
 {
 	t_data	data;
@@ -24,7 +17,7 @@ int	main(int ac, char *av[])
 	if (!data.exit)
 		ph_monitor(&data, philo);
 	if (!data.exit)
-		ph_join_threads(&data, philo);
+		ph_join_threads(&data, philo, data.ph_count);
 	if (data.exit)
 		return (1);
 	ph_final_cleanup(philo);

@@ -14,6 +14,7 @@ void	ph_monitor(t_data *data, t_philo *philo)
 		if (data->must_eat)
 			if (is_philo_full(data, philo) > 0)
 				return ;
+		usleep(500);
 	}
 }
 
@@ -21,6 +22,7 @@ static size_t	is_philo_dead(t_data *data, t_philo *philo)
 {
 	size_t	id;
 	long	elapsed;
+	long	current;
 
 	id = 0;
 	while (id < data->ph_count)
@@ -28,10 +30,11 @@ static size_t	is_philo_dead(t_data *data, t_philo *philo)
 		elapsed = ph_time_to_ms() - philo[id].last_meal;
 		if (elapsed >= (long)data->die_ms)
 		{
+			current = ph_time_to_ms() - data->start_ms;
 			data->dead = true;
-			pthread_mutex_lock(&data->print_lock);
-			printf("%ld %zu died\n", ph_time_to_ms() - data->start_ms, philo[id].index);
-			pthread_mutex_unlock(&data->print_lock);
+			pthread_mutex_lock(&data->data_lock);
+			printf("%ld %zu died\n", current, philo[id].index);
+			pthread_mutex_unlock(&data->data_lock);
 			return (2);
 		}
 		id++;

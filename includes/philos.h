@@ -23,9 +23,7 @@ typedef struct s_data
 	_Atomic size_t	sated;
 	_Atomic bool	dead;
 	pthread_t		*threads;
-	pthread_mutex_t	print_lock;
-	//pthread_mutex_t	meal_lock;
-	//pthread_mutex_t	index_lock;
+	pthread_mutex_t	data_lock;
 	pthread_mutex_t	*forks;
 }		t_data;
 
@@ -44,20 +42,19 @@ void	ph_parse_input(int ac, char **av, t_data *data);
 void	ph_init_mutexes(t_data *data);
 void	ph_init_philos(t_data *data, t_philo **philo);
 void	ph_create_threads(t_data *data, t_philo *philo);
-void	ph_join_threads(t_data *data, t_philo *philo);
+void	ph_join_threads(t_data *data, t_philo *philo, size_t ind);
 void	run_routine(void *arg);
 
 //cleanup
 void	ph_detach_threads(t_data *data, t_philo *philo, size_t ind, char *msg);
 void	ph_destroy_mutexes(t_data *data, size_t ind, char *msg);
-void	ph_cleanup(char *msg, t_philo *philo, size_t i);
+void	ph_cleanup(char *msg, t_philo *philo, t_data *data, size_t i);
 void	ph_final_cleanup(t_philo *philo);
 void	ph_exit(t_data *data, char *msg);
 
 //utils
 void	solo_philo(t_philo *philo);
 int		ph_putstr_fd(char *s, int fd);
-int		ft_isblank(int c);
 long	ph_time_to_ms(void);
 
 #endif

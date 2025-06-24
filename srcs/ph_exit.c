@@ -17,28 +17,34 @@ void	ph_detach_threads(t_data *data, t_philo *philo, size_t ind, char *msg)
 		pthread_detach(data->threads[i]);
 		i++;
 	}
-	ph_cleanup(msg, philo, data->ph_count);
+	ph_cleanup(msg, philo, data, data->ph_count);
 }
 
-void	ph_cleanup(char *msg, t_philo *philo, size_t i)
+void	ph_cleanup(char *msg, t_philo *philo, t_data *data, size_t i)
 {
-	ph_destroy_mutexes(philo->data, i, msg);
+	ph_destroy_mutexes(data, i, msg);
+	if (data->threads)
+		free(data->threads);
+	if (data->forks)
+		free(data->forks);
 	if (philo)
 		free(philo);
 }
 
-void	ph_final_cleanup(t_philo *philo) //delete
+void	ph_final_cleanup(t_philo *philo)
 {
 	size_t	i;
 	t_data	*data;
 
 	i = 0;
 	data = philo->data;
+	if (data->forks)
+		free(data->forks);
 	if (philo)
 		free(philo);
 	if (data->threads)
 		free(data->threads);
-	pthread_mutex_destroy(&data->print_lock);
+	pthread_mutex_destroy(&data->data_lock);
 	while (i < data->ph_count)
 	{
 		pthread_mutex_destroy(&data->forks[i]);
@@ -51,11 +57,7 @@ void	ph_destroy_mutexes(t_data *data, size_t ind, char *msg)
 	size_t	i;
 
 	i = 0;
-	if (data->threads)
-		free(data->threads);
-	pthread_mutex_destroy(&data->print_lock);
-	//pthread_mutex_destroy(&data->index_lock);
-	//pthread_mutex_destroy(&data->meal_lock);
+	pthread_mutex_destroy(&data->data_lock);
 	if (ind > 0)
 	{
 		while (i < ind)

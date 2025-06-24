@@ -25,13 +25,11 @@ than 0 and cannot exceed value of INT_MAX (2147483647)\n"
 
 # define THREAD_FAIL "thread creation failed!\n"
 
-# define INIT_PRINT_LOCK "failed to init print_lock\n"
-
-# define INIT_INDEX_LOCK "failed to init index_lock\n"
+# define INIT_DATA_LOCK "failed to init data_lock\n"
 
 # define INIT_FORK_MUTEX "failed to init fork mutex\n"
 
-# define INIT_MEAL_LOCK "failed to init meal mutex\n"
+# define JOIN_FAIL "failed to join threads\n"
 
 # define PHILO_MAX 500
 

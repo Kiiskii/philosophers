@@ -10,7 +10,7 @@ void	ph_init_philos(t_data *data, t_philo **philo)
 	tmp = malloc(data->ph_count * sizeof(t_philo));
 	if (!tmp)
 	{
-		ph_cleanup(MALLOC_FAIL, *philo, data->ph_count);
+		ph_cleanup(MALLOC_FAIL, *philo, data, data->ph_count);
 		return ;
 	}
 	i = 0;
@@ -36,25 +36,4 @@ static void	init_forks(t_data *data, t_philo *tmp, size_t i)
 		else
 			tmp[i].l_fork = &data->forks[i + 1];
 	}
-	/*
-	if (data->ph_count % 2 != 0)
-	{
-		tmp[i].r_fork = &data->forks[i];
-		if (data->ph_count > 1)
-		{
-			if (i == 0)
-				tmp[i].l_fork = &data->forks[data->ph_count - 1];
-			else
-				tmp[i].l_fork = &data->forks[i - 1];
-		}
-	}
-	else
-	{
-		tmp[i].r_fork = &data->forks[i];
-		if (i + 1 == data->ph_count)
-			tmp[i].l_fork = &data->forks[0];
-		else
-			tmp[i].l_fork = &data->forks[i + 1];
-	}
-	*/
 }
