@@ -31,13 +31,10 @@ void	ph_join_threads(t_data *data, t_philo *philo, size_t ind)
 	size_t	i;
 
 	i = 0;
+	(void)philo;
 	while (i < ind)
 	{
-		if (pthread_join(data->threads[i], NULL))
-		{
-			ph_detach_threads(data, philo, ind, JOIN_FAIL);
-			return ;
-		}
+		pthread_join(data->threads[i], NULL);
 		i++;
 	}
 }

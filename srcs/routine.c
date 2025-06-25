@@ -10,10 +10,10 @@ void	run_routine(void *arg)
 	t_philo	*philo;
 
 	philo = arg;
-	if (philo->data->exit)
-		return ;
 	while (philo->data->start_ms > ph_time_to_ms())
 		usleep(500);
+	if (philo->data->exit)
+		return ;
 	ph_print(THINKING, philo, philo->data);
 	if (philo->data->ph_count == 1)
 	{

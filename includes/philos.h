@@ -19,7 +19,7 @@ typedef struct s_data
 	long			eat_ms;
 	long			sleep_ms;
 	size_t			must_eat;
-	bool			exit;
+	_Atomic bool	exit;
 	_Atomic size_t	sated;
 	_Atomic bool	dead;
 	pthread_t		*threads;
@@ -47,7 +47,6 @@ void	ph_join_threads(t_data *data, t_philo *philo, size_t ind);
 void	run_routine(void *arg);
 
 //cleanup
-void	ph_detach_threads(t_data *data, t_philo *philo, size_t ind, char *msg);
 void	ph_destroy_mutexes(t_data *data, size_t ind, char *msg);
 void	ph_cleanup(char *msg, t_philo *philo, t_data *data, size_t i);
 void	ph_final_cleanup(t_philo *philo);

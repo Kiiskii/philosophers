@@ -7,19 +7,6 @@ void	ph_exit(t_data *data, char *msg)
 	data->exit = true;
 }
 
-void	ph_detach_threads(t_data *data, t_philo *philo, size_t ind, char *msg)
-{
-	size_t	i;
-
-	i = 0;
-	while (i < ind)
-	{
-		pthread_detach(data->threads[i]);
-		i++;
-	}
-	ph_cleanup(msg, philo, data, data->ph_count);
-}
-
 void	ph_cleanup(char *msg, t_philo *philo, t_data *data, size_t i)
 {
 	ph_destroy_mutexes(data, i, msg);
