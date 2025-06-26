@@ -17,7 +17,7 @@ int	main(int ac, char *av[])
 	if (!data.exit)
 		ph_monitor(&data, philo);
 	if (!data.exit)
-		ph_join_threads(&data, philo, data.ph_count);
+		ph_join_threads(&data, data.ph_count);
 	if (data.exit)
 		return (1);
 	ph_final_cleanup(philo);

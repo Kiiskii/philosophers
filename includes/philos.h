@@ -43,7 +43,7 @@ void	ph_parse_input(int ac, char **av, t_data *data);
 void	ph_init_mutexes(t_data *data);
 void	ph_init_philos(t_data *data, t_philo **philo);
 void	ph_create_threads(t_data *data, t_philo *philo);
-void	ph_join_threads(t_data *data, t_philo *philo, size_t ind);
+void	ph_join_threads(t_data *data, size_t ind);
 void	run_routine(void *arg);
 
 //cleanup

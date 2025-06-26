@@ -18,7 +18,7 @@ void	ph_create_threads(t_data *data, t_philo *philo)
 		if (pthread_create(&data->threads[i], NULL, func, &philo[i]))
 		{
 			data->exit = true;
-			ph_join_threads(data, philo, i);
+			ph_join_threads(data, i);
 			ph_cleanup(THREAD_FAIL, philo, data, i);
 			return ;
 		}
@@ -26,12 +26,11 @@ void	ph_create_threads(t_data *data, t_philo *philo)
 	}
 }
 
-void	ph_join_threads(t_data *data, t_philo *philo, size_t ind)
+void	ph_join_threads(t_data *data, size_t ind)
 {
 	size_t	i;
 
 	i = 0;
-	(void)philo;
 	while (i < ind)
 	{
 		pthread_join(data->threads[i], NULL);

@@ -8,27 +8,25 @@ static void	ph_think_sleep(t_philo *philo);
 void	run_routine(void *arg)
 {
 	t_philo	*philo;
+	t_data	*data;
 
 	philo = arg;
-	while (philo->data->start_ms > ph_time_to_ms())
+	data = philo->data;
+	while (data->start_ms > ph_time_to_ms())
 		usleep(500);
-	if (philo->data->exit)
+	if (data->exit)
 		return ;
 	ph_print(THINKING, philo, philo->data);
-	if (philo->data->ph_count == 1)
+	if (data->ph_count == 1)
+		return (solo_philo(philo));
+	philo->last_meal = data->start_ms;
+	while (philo->index % 2 && ph_time_to_ms() - data->start_ms < data->eat_ms
+		&& !data->dead)
+		usleep(500);
+	while (!data->dead)
 	{
-		solo_philo(philo);
-		return ;
-	}
-	philo->last_meal = philo->data->start_ms;
-	if (philo->index % 2 != 0 && philo->data->ph_count > 1)
-		usleep((philo->data->eat_ms / 4) * 1000);
-	while (!philo->data->dead)
-	{
-		if (philo->data->dead)
-			return ;
 		ph_prep_meal(philo);
-		if (philo->data->dead)
+		if (data->dead)
 			return ;
 		ph_think_sleep(philo);
 	}
@@ -54,18 +52,18 @@ static void	ph_think_sleep(t_philo *philo)
 	data = philo->data;
 	ph_print(SLEEPING, philo, data);
 	current_time = ph_time_to_ms();
-	while (ph_time_to_ms() - current_time < data->sleep_ms)
-	{
-		if (data->dead)
-			break ;
+	while (ph_time_to_ms() - current_time < data->sleep_ms && !data->dead)
 		usleep(500);
-	}
+	if (data->dead)
+		return ;
 	time = 1000 * (data->die_ms - data->eat_ms - data->sleep_ms);
 	ph_print(THINKING, philo, data);
-	if (philo->data->ph_count % 2 != 0)
+	if (philo->data->ph_count % 2 != 0 && time > 0)
 		usleep(time * 0.75);
-	else
+	else if (time > 0)
 		usleep(time * 0.25);
+	else
+		usleep(500);
 }
 
 static void	ph_prep_meal(t_philo *philo)
@@ -78,8 +76,7 @@ static void	ph_prep_meal(t_philo *philo)
 	philo->last_meal = ph_time_to_ms();
 	pthread_mutex_unlock(&data->meal_lock);
 	current_time = ph_time_to_ms();
-	while (ph_time_to_ms() - current_time < data->eat_ms
-		&& (!data->dead || data->sated != data->ph_count))
+	while (ph_time_to_ms() - current_time < data->eat_ms && !data->dead)
 		usleep(500);
 	pthread_mutex_unlock(philo->l_fork);
 	pthread_mutex_unlock(philo->r_fork);
@@ -88,7 +85,7 @@ static void	ph_prep_meal(t_philo *philo)
 
 static void	ph_take_forks_eat(t_data *data, t_philo *philo)
 {
-	if (philo->index % 2 != 0)
+	if (philo->index == data->ph_count)
 	{
 		pthread_mutex_lock(philo->l_fork);
 		ph_print(FORKING, philo, data);
