@@ -27,6 +27,8 @@ than 0 and cannot exceed value of INT_MAX (2147483647)\n"
 
 # define INIT_DATA_LOCK "failed to init data_lock\n"
 
+# define INIT_MEAL_LOCK "failed to init meal_lock\n"
+
 # define INIT_FORK_MUTEX "failed to init fork mutex\n"
 
 # define JOIN_FAIL "failed to join threads\n"

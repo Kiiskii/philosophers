@@ -25,6 +25,11 @@ void	ph_final_cleanup(t_philo *philo)
 
 	i = 0;
 	data = philo->data;
+	while (i < data->ph_count)
+	{
+		pthread_mutex_destroy(&data->forks[i]);
+		i++;
+	}
 	if (data->forks)
 		free(data->forks);
 	if (philo)
@@ -33,11 +38,6 @@ void	ph_final_cleanup(t_philo *philo)
 		free(data->threads);
 	pthread_mutex_destroy(&data->data_lock);
 	pthread_mutex_destroy(&data->meal_lock);
-	while (i < data->ph_count)
-	{
-		pthread_mutex_destroy(&data->forks[i]);
-		i++;
-	}
 }
 
 void	ph_destroy_mutexes(t_data *data, size_t ind, char *msg)

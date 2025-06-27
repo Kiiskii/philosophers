@@ -16,7 +16,7 @@ void	run_routine(void *arg)
 		usleep(500);
 	if (data->exit)
 		return ;
-	ph_print(THINKING, philo, philo->data);
+	ph_print(THINKING, philo, data);
 	if (data->ph_count == 1)
 		return (solo_philo(philo));
 	philo->last_meal = data->start_ms;
@@ -58,9 +58,9 @@ static void	ph_think_sleep(t_philo *philo)
 		return ;
 	time = 1000 * (data->die_ms - data->eat_ms - data->sleep_ms);
 	ph_print(THINKING, philo, data);
-	if (philo->data->ph_count % 2 != 0 && time > 0)
+	if (philo->data->ph_count % 2 != 0 && time > 0 && time < 500000)
 		usleep(time * 0.75);
-	else if (time > 0)
+	else if (time > 0 && time < 500000)
 		usleep(time * 0.25);
 	else
 		usleep(500);
